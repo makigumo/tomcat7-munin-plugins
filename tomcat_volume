@@ -89,10 +89,11 @@ if(!eval "require XML::Simple;") {
 } 
 
 my $URL      = exists $ENV{'url'}      ? $ENV{'url'}      : "http://%s:%s\@127.0.0.1:%d/manager/status?XML=true";
-my $PORT     = exists $ENV{'ports'}    ? $ENV{'ports'}    : 8080;
+my $PORT     = exists $ENV{'ports'}    ? $ENV{'ports'}    : 80;
 my $USER     = exists $ENV{'user'}     ? $ENV{'user'}     : "munin";
 my $PASSWORD = exists $ENV{'password'} ? $ENV{'password'} : "munin";
 my $TIMEOUT  = exists $ENV{'timeout'}  ? $ENV{'timeout'}  : 30;
+my $CONNECTOR = exists $ENV{'connector'} ? $ENV{'connector'} : "http-bio-".$PORT;
 
 my $url = sprintf $URL, $USER, $PASSWORD, $PORT;
 
@@ -131,8 +132,8 @@ my %options = ( KeyAttr => { connector => 'name' }, ForceArray => 1 );
 my $xml = $xs->XMLin($response->content, %options);
 
 
-if($xml->{'connector'}->{'"http-bio-'.$PORT.'"'}->{'requestInfo'}->[0]->{'bytesSent'}) {
-    print "volume.value " . $xml->{'connector'}->{'"http-bio-'.$PORT.'"'}->{'requestInfo'}->[0]->{'bytesSent'} . "\n";
+if($xml->{'connector'}->{'"'.$CONNECTOR.'"'}->{'requestInfo'}->[0]->{'bytesSent'}) {
+    print "volume.value " . $xml->{'connector'}->{'"'.$CONNECTOR.'"'}->{'requestInfo'}->[0]->{'bytesSent'} . "\n";
 } else {
     print "volume.value U\n";
 }

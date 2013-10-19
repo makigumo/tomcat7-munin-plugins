@@ -264,13 +264,13 @@ w["jvm"]["used"] = node.attributes["total"].to_i - node.attributes["free"].to_i
 w["jvm"]["free"] = node.attributes["free"]
 
 # copy connector datas to hash
-node = REXML::XPath.first(doc, "//status/connector[@name='" + @connector + "']/threadInfo")
+node = REXML::XPath.first(doc, "//status/connector[@name='\"" + @connector + "\"']/threadInfo")
 if node
 	w["threads"]["max"] = node.attributes["maxThreads"]
 	w["threads"]["idle"] = node.attributes["currentThreadCount"].to_i - node.attributes["currentThreadsBusy"].to_i
 	w["threads"]["busy"] = node.attributes["currentThreadsBusy"]
 end
-node = REXML::XPath.first(doc, "//status/connector[@name='" + @connector + "']/requestInfo")
+node = REXML::XPath.first(doc, "//status/connector[@name='\"" + @connector + "\"']/requestInfo")
 if node
 	w["maxtime"]["maxtime"] = node.attributes["maxTime"]
 	w["avgtime"]["avgtime"] = sprintf "%.2f", (node.attributes["processingTime"].to_f / node.attributes["requestCount"].to_f / 1000)
